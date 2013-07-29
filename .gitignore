@@ -4,3 +4,4 @@ database.php
 public/assets/*
 tmp/*
 database-test.php
+*~
