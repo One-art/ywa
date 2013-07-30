@@ -1,17 +1,25 @@
 <?php
-
 $yii    = dirname(__FILE__).'/../../framework/yii.php';
-$local  = require (dirname(__FILE__) . '/../config/local/local.php');
-$web  = require (dirname(__FILE__) . '/../config/web.php');
-$shared = require dirname(__FILE__).'/../config/shared.php';
-$backEnd = require dirname(__FILE__).'/../config/backEnd.php';
 
+switch ($_SERVER['SERVER_ADDR']) {
+    case '127.0.0.1':
+    case '127.0.1.1':
+        defined('YII_DEBUG') or define('YII_DEBUG',true);
+        defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+        break;
+}
 
 require_once($yii);
 
-$config = CMap::mergeArray($shared, $web);
-$config = CMap::mergeArray($config, $backEnd);
-$config = CMap::mergeArray($config, $local);
+switch ($_SERVER['SERVER_ADDR']) {
+    case '127.0.0.1':
+    case '127.0.1.1':
+        $config = require ( dirname(__FILE__) . '/../config/development_back.php' );
+        break;
+    default:
+        $config = require ( dirname(__FILE__) . '/../config/production_back.php' );
+        break;
+}
 
 $app = Yii::createWebApplication($config)->runEnd('backend');
 
