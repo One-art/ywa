@@ -9,27 +9,35 @@ define('ROOT', realpath(dirname(__FILE__) .DS. '..'));
 require_once ROOT.DS.'app' . DS.'components'.DS.'helpers'.DS.'functions.php';
 
 
-return array(
-	'basePath'    => ROOT.DS.'app',
-	'name'        => 'My Web Application',
-    'runtimePath' => ROOT . DS . 'tmp',
+return CMap::mergeArray(
+    array(
+        'basePath'    => ROOT.DS.'app',
+        'name'        => 'My Web Application',
+        'runtimePath' => ROOT . DS . 'tmp',
 
-	// preloading 'log' component
-	'preload' => array('log'),
+        'behaviors'=>array(
+            'runEnd'=>array(
+                'class'=>'application.behaviors.WebApplicationEndBehavior',
+            ),
+        ),
 
-	// autoloading model and component classes
-	'import' => array(
-		'application.components.*',
-        'application.components.base.*',
-        'application.components.exceptions.*',
-        'application.components.helpers.*',
+        // preloading 'log' component
+        'preload' => array('log'),
 
-        'application.models.*',
-	),
+        // autoloading model and component classes
+        'import' => array(
+            'application.controllers.*',
+            'application.components.*',
+            'application.components.base.*',
+            'application.components.exceptions.*',
+            'application.components.helpers.*',
+            'ext.giix-components.*',
+            'application.models.*',
+        ),
 
-	// application components
-	'components' => array(
-	),
-
-	'params' => require 'params.php',
+        // application components
+        'components' => array(
+        ),
+    ),
+    require_once(dirname(__FILE__).'/settings.php')
 );
