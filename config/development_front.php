@@ -38,14 +38,8 @@ return CMap::mergeArray(
                 'class'=>'CLogRouter',
                 'routes'=>array(
                     array(
-                        'class'=>'CFileLogRoute',
-                        'levels'=>'info',
-                        'categories'=>'system.*',
-                    ),
-                    array(
-                        'class'=>'CProfileLogRoute',
-                        'levels'=>'profile',
-                        'enabled'=>true,
+                        'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+                        'ipFilters'=>array('127.0.0.1','127.0.1.1'),
                     ),
                 ),
             ),
@@ -57,6 +51,7 @@ return CMap::mergeArray(
                 'ipFilters'=>array('127.0.0.1','::1'),
                 'generatorPaths' => array(
                     'ext.giix-core', // giix generators
+                    'bootstrap.gii',
                 ),
             ),
         ),

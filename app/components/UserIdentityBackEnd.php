@@ -11,7 +11,10 @@ class UserIdentityBackEnd extends UserIdentity
 
     public function authenticate(){
 
-        $user = User::model()->find('LOWER(email)=? AND role = ?', array(strtolower($this->username), 'admin'));
+        $criteria = new CDbCriteria();
+        $criteria->compare('LOWER(email)', strtolower($this->username));
+        $criteria->addInCondition('role', User::$roleBackEnd);
+        $user = User::model()->find($criteria);
         if($user===null) {
             $this->errorCode = self::ERROR_USERNAME_INVALID;
         } elseif((md5($this->password)!==$user->password))

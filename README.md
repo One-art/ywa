@@ -1,18 +1,35 @@
 YWA - Yii Wep Application Skeleton
 ==================================
 
-Скелет базового приложения на Yii Framework.
-Для установки необходимо склонировать репозиторий и указать в public/index.php путь к bootstrap файлу yii.php фреймворка.
+All what you need for starting new app on Yii Framework.
 
-Установленные расширения:
+Included extensions:
 * giix - https://github.com/rcoelho/giix
+* xupload v0.4
+* yii-debug-toolbar v1.1.7
+* yii Booster v1.1.0
 
-Разделение на frontEnd & BackEnd
+Included font-awesome
 
-Описание директорий:
+==================================
 
-* app - приложение
-* bin - консольный скрипт и например скрипт gearman worker
-* config - общая конфигурация приложения
-* tmp - runtime директория (Необходимо установить права на запись)
-* public - папка webroot web сервера
+* Division by frontEnd & BackEnd
+* RBAC access control (PhpAuthManager)
+
+==================================
+
+Directories description:
+
+* app - application folder
+* bin - console script
+* config - all settings for development and production
+* tmp - runtime folder (don't forget set write permission)
+* assets - same tmp folder. All extensions put js/css files in this folder
+* css - style files
+* js - javascript files
+
+Install guide
+=================================
+
+- Clone this repo in your folder
+- Update path for framework in index.php and admin.php

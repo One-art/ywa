@@ -5,7 +5,7 @@
  * LoginForm is the data structure for keeping
  * user login form data. It is used by the 'login' action of 'SiteController'.
  */
-class LoginFormFrontEnd extends CFormModel
+class LoginFormFrontEnd extends LoginForm
 {
 	/**
 	 * Authenticates the password.
@@ -18,7 +18,11 @@ class LoginFormFrontEnd extends CFormModel
 			$this->_identity=new UserIdentityFrontEnd($this->email,$this->password);
 			if(!$this->_identity->authenticate())
             {
-
+                if($this->_identity->errorCode===UserIdentityFrontEnd::ERROR_USERNAME_INVALID
+                    || $this->_identity->errorCode===UserIdentityFrontEnd::ERROR_PASSWORD_INVALID)
+                {
+                    $this->addError('email',Yii::t('login','Email/Password incorrect'));
+                }
             }
 		}
 	}

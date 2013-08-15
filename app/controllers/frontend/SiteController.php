@@ -56,6 +56,28 @@ class SiteController extends FrontEndController
         $this->render('index');
     }
 
+
+    public function actionSignUp()
+    {
+        if(!Yii::app()->user->isGuest)
+            $this->redirect(array('index'));
+
+        $model = new User('signUp');
+
+        if(isset($_POST['User']))
+        {
+            $model->attributes=$_POST['User'];
+
+            if($model->save())
+            {
+                Yii::app()->user->setFlash('success', Yii::t('user', 'You been successfully sign up. Now you can login'));
+                $this->redirect(array('login'));
+            }
+        }
+
+        $this->render('signUp', array('model'=>$model));
+    }
+
     /**
      * This is the action to handle external exceptions.
      */
@@ -71,6 +93,19 @@ class SiteController extends FrontEndController
     }
 
     /**
+     * Performs the AJAX validation.
+     * @param CModel the model to be validated
+     */
+    protected function performAjaxValidation($model)
+    {
+        if(isset($_POST['ajax']))
+        {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+    }
+
+    /**
      * Displays the login page
      */
     public function actionLogin()
@@ -79,10 +114,8 @@ class SiteController extends FrontEndController
             $this->redirect(array('index'));
 
         $model=new LoginFormFrontEnd();
-        if(Yii::app()->user->getState('login-error', 0)==1)
-        {
-            $model->scenario = 'error';
-        }
+
+        $this->performAjaxValidation($model);
 
         if(isset($_POST['LoginFormFrontEnd']))
         {

@@ -1,7 +1,7 @@
 .idea/*
 local.php
 database.php
-public/assets/*
+assets/*
 tmp/*
 database-test.php
 *~

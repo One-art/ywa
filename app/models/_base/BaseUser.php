@@ -42,15 +42,14 @@ abstract class BaseUser extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('name, email, password, contact, time_reg, language_id', 'required'),
-			array('lastvisit, time_reg, language_id, country_id, status, invited_by_user_id, color', 'numerical', 'integerOnly'=>true),
+			array('lastvisit, time_reg, language_id, status', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>200),
 			array('email', 'length', 'max'=>100),
 			array('password', 'length', 'max'=>50),
 			array('contact', 'length', 'max'=>500),
 			array('role', 'length', 'max'=>20),
-			array('language_code', 'length', 'max'=>5),
-			array('role, lastvisit, language_code, country_id, status, invited_by_user_id, color', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('user_id, name, email, password, contact, role, lastvisit, time_reg, language_id, language_code, country_id, status, invited_by_user_id, color', 'safe', 'on'=>'search'),
+			array('role, lastvisit, status', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('user_id, name, email, password, contact, role, lastvisit, time_reg, language_id, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,11 +74,7 @@ abstract class BaseUser extends GxActiveRecord {
 			'lastvisit' => Yii::t('user', 'Lastvisit'),
 			'time_reg' => Yii::t('user', 'Time Reg'),
 			'language_id' => Yii::t('user', 'Language'),
-			'language_code' => Yii::t('user', 'Language Code'),
-			'country_id' => Yii::t('user', 'Country'),
 			'status' => Yii::t('user', 'Status'),
-			'invited_by_user_id' => Yii::t('user', 'Invited By User'),
-			'color' => Yii::t('user', 'Color'),
 		);
 	}
 
@@ -95,11 +90,7 @@ abstract class BaseUser extends GxActiveRecord {
 		$criteria->compare('lastvisit', $this->lastvisit);
 		$criteria->compare('time_reg', $this->time_reg);
 		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('language_code', $this->language_code, true);
-		$criteria->compare('country_id', $this->country_id);
 		$criteria->compare('status', $this->status);
-		$criteria->compare('invited_by_user_id', $this->invited_by_user_id);
-		$criteria->compare('color', $this->color);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

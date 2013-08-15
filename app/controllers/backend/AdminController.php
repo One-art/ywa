@@ -78,15 +78,15 @@ class AdminController extends BackEndController
         if(!Yii::app()->user->isGuest)
             $this->redirect(array('index'));
 
-        $model=new LoginFormFrontEnd();
+        $model=new LoginFormBackEnd();
         if(Yii::app()->user->getState('login-error', 0)==1)
         {
             $model->scenario = 'error';
         }
 
-        if(isset($_POST['LoginFormFrontEnd']))
+        if(isset($_POST['LoginFormBackEnd']))
         {
-            $model->attributes=$_POST['LoginFormFrontEnd'];
+            $model->attributes=$_POST['LoginFormBackEnd'];
 
             if($model->validate() && $model->login())
             {
@@ -103,6 +103,6 @@ class AdminController extends BackEndController
     public function actionLogout()
     {
         Yii::app()->user->logout();
-        $this->redirect(Yii::app()->homeUrl);
+        $this->redirect(array('index'));
     }
 }

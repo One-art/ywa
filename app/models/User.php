@@ -6,6 +6,7 @@ class User extends BaseUser
 {
     const ROLE_ADMIN = 'admin';
     const ROLE_USER = 'user';
+    const ROLE_PARTNER = 'partner';
 
     public $passwordConfirm;
     public $newPassword;
@@ -42,28 +43,6 @@ class User extends BaseUser
             return Yii::t('user', 'Partner');
         elseif($option == self::ROLE_ADMIN)
             return Yii::t('user', 'Admin');
-    }
-
-    public function getColorOptions()
-    {
-        return array(
-            array('id'=>self::COLOR_DEFAULT, 'title'=>Yii::t('user', 'Default (No color)')),
-            array('id'=>self::COLOR_GREEN, 'title'=>Yii::t('user', 'Green')),
-            array('id'=>self::COLOR_RED, 'title'=>Yii::t('user', 'Red')),
-        );
-    }
-
-    public function getColorOption($option=null)
-    {
-        if($option==null && $this->color)
-            $option = $this->color;
-
-        if($option == self::COLOR_GREEN)
-            return Yii::t('user', 'Green');
-        elseif($option == self::COLOR_RED)
-            return Yii::t('user', 'Red');
-        else
-            return Yii::t('user', 'Default (No color)');
     }
 
     public function afterFind() {
@@ -105,31 +84,16 @@ class User extends BaseUser
 
     public function afterValidate() {
         if($this->isNewRecord){
-
-            if($this->scenario == "register")
-            {
-            if(Yii::app()->params['registerType']==self::REGISTER_CLOSED)
-                $this->addError('email', Yii::t('user', 'Registration is temporarily closed. Please try again later or contact us'));
-            elseif(Yii::app()->params['registerType']==self::REGISTER_INVITE)
-            {
-                if(empty($this->errors) && !($this->inviteModel = Invite::model()->check($this->invite)))
-                    $this->addError('invite', Yii::t('user', 'Invite code invalid. Possible it has already been used'));
-            }
-            }
-
         }
         return parent::afterValidate();
     }
 
     public function beforeSave() {
         if($this->isNewRecord){
-
-            if($this->inviteModel)
-                $this->invited_by_user_id = $this->inviteModel->user_id;
-
             if($this->password)
                 $this->password = md5($this->password);
         } else {
+            // TODO: add checkAccess for change password
             if($this->newPassword)
                 $this->password = md5($this->newPassword);
         }
@@ -146,10 +110,10 @@ class User extends BaseUser
 
     public function rules() {
 
-        $default = CMap::mergeArray(parent::rules(), array(
-                array('passwordConfirm', 'required', 'on'=>'register'),
+        return CMap::mergeArray(parent::rules(), array(
+                array('passwordConfirm', 'required', 'on'=>'signUp'),
                 array('name', 'unsafe', 'on'=>'update'),
-                array('passwordConfirm', 'compare', 'compareAttribute'=>'password', 'allowEmpty'=>false, 'on'=>'register'),
+                array('passwordConfirm', 'compare', 'compareAttribute'=>'password', 'allowEmpty'=>false, 'on'=>'signUp'),
                 array('newPasswordConfirm', 'compare', 'compareAttribute'=>'newPassword', 'allowEmpty'=>false, 'on'=>'update'),
                 array('newPassword, newPasswordConfirm, password', 'length', 'max'=>50, 'min'=>6),
                 array('newPassword, password', 'match', 'pattern'=>'/^[a-z0-9@_\-]{6,}/i', 'message'=>Yii::t('user', 'Allowed characters: 0-9, a-Z, @, _, -')),
@@ -157,21 +121,10 @@ class User extends BaseUser
                 array('email', 'email'),
                 array('email, name', 'unique'),
                 array('contact', 'length', 'max'=>15),
-                array('verifyCode', 'captcha', 'on'=>'register'),
+                array('verifyCode', 'captcha', 'on'=>'signUp'),
                 //array('role, time_reg, status', 'readOnly'=>true, 'on'=>'UserUpdate'),
             )
         );
-
-        if(Yii::app()->params['registerType']==self::REGISTER_INVITE)
-        {
-            return CMap::mergeArray($default, array(
-                    array('invite', 'required', 'on'=>'register'),
-                    array('invite', 'length', 'max'=>100, 'min'=>10),
-                )
-            );
-        } else {
-            return $default;
-        }
     }
 
     public function attributeLabels() {
@@ -179,10 +132,6 @@ class User extends BaseUser
                 'passwordConfirm' => Yii::t('user', 'Password confirm'),
                 'newPassword' => Yii::t('user', 'Change password'),
                 'newPasswordConfirm' => Yii::t('user', 'Change password confirm'),
-                'contact' => Yii::t('user', 'ICQ'),
-                'balanceSum' => Yii::t('user', 'Balance'),
-                'invite' => Yii::t('user', 'Invite code'),
-                'verifyCode'=> Yii::t('login','Verify code'),
             )
         );
     }

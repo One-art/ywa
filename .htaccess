@@ -1,7 +1,15 @@
-<IfModule mod_rewrite.c>
-	RewriteEngine on
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule  ^$ public/    [L]
-	RewriteRule  (.*) public/$1 [L]
-</IfModule>
+AddDefaultCharset utf-8
+
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+
+RewriteRule ^panel admin.php [L]
+RewriteRule ^panel/ admin.php [L]
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php

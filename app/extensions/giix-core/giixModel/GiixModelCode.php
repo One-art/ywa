@@ -155,7 +155,7 @@ class GiixModelCode extends ModelCode {
 				if ($label === 'Id')
 					$label = 'ID';
 
-				$label = "Yii::t('app', '{$label}')";
+				$label = "Yii::t('{$table->name}', '{$label}')";
 			}
 			$labels[$column->name] = $label;
 		}

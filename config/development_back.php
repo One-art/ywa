@@ -31,9 +31,34 @@ return CMap::mergeArray(
             ),
         ),
 
+        'cache' => array (
+            'class'=>'system.caching.CDummyCache',
+        ),
+
+        'log'=>array(
+            'class'=>'CLogRouter',
+            'routes'=>array(
+                array(
+                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+                    'ipFilters'=>array('127.0.0.1','127.0.1.1'),
+                ),
+            ),
+        ),
+
         'errorHandler'=>array(
             'errorAction'=>'admin/error',
         ),
 
     ),
+        'modules'=> array(
+            'gii' => array(
+                'class' => 'system.gii.GiiModule',
+                'password'=>'root',
+                'ipFilters'=>array('127.0.0.1','::1'),
+                'generatorPaths' => array(
+                    'ext.giix-core', // giix generators
+                    'bootstrap.gii',
+                ),
+            ),
+        ),
 ));
